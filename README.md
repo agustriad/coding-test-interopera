@@ -10,6 +10,15 @@ This project is a solution for implementing:
 
 ---
 
+## Key Design Decisions
+
+- Using **Domain-Driven Design (DDD)** on backend to ensure clear separation between business logic, infrastructure, and external interfaces.
+- Caching AI prompt responses via **Redis** to improve response time and minimize redundant requests.
+- **Next.js with React Context + localStorage** on frontend to persist chat history across sessions and refresh.
+
+
+---
+
 ## Implemented Solution
 
 ### Backend (FastAPI + DDD)
