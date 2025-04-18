@@ -3,7 +3,7 @@ services:
     build: ./backend
     container_name: dev_fastapi
     ports:
-      - "8000:8000"
+      - "8100:8100"
     stdin_open: true # Membuka akses ke stdin
     tty: true
     restart: unless-stopped

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useOptimistic } from "react";
+import { useState } from "react";
 import { useChat } from "@/contexts/ChatContext";
 import { sendPrompt } from "@/services/prompt";
 import { Chat } from "@/types/chats";
@@ -8,25 +8,26 @@ import { Chat } from "@/types/chats";
 export default function ChatInput() {
   const [input, setInput] = useState("");
   const { addChat } = useChat();
-  const [optimisticChats, addOptimisticChat] = useOptimistic<Chat[]>([]);
+  const [loading, setLoading] = useState(false);
+
 
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
-    console.log(optimisticChats.length,"optimisticChats.length222")
-    const newChat: Chat = { id: Date.now().toString(), type:"text", content: input, response: null };
+    
+    const newChat: Chat = { id: crypto.randomUUID(), type:"text", content: input, response: null };
     addChat(newChat);
-    addOptimisticChat([...optimisticChats, newChat]);
     setInput("");
+    setLoading(true);
 
-    console.log(optimisticChats.length,"optimisticChats.length")
     try {
       const res = await sendPrompt(input);
       const aiChat: Chat = res;
       addChat(aiChat);
-      addOptimisticChat([...optimisticChats, aiChat]);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,8 +40,8 @@ export default function ChatInput() {
         onChange={(e) => setInput(e.target.value)}
         placeholder="Prompt..."
       />
-      <button onClick={handleSubmit} className="p-2 px-4 rounded bg-blue-500 text-white">
-        {optimisticChats.length % 2 !== 0 ? "⏳" : "Send"}
+      <button onClick={handleSubmit} className="p-2 px-4 rounded bg-blue-500 text-white" disabled={loading ? true : false}>
+        {loading ? "⏳" : "Send"}
       </button>
     </div>
   );

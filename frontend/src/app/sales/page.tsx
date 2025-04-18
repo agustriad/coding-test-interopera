@@ -25,9 +25,7 @@ export default function SalesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {salesReps.map((rep, index) => (
             <div key={rep.id || index} className="p-4 border rounded-lg shadow-md">
-              <CardSales name={rep.name} clients={rep.clients} region={rep.region} role={rep.role} skills={rep.skills} key={rep.id || index}/>
-              
-
+              <CardSales name={rep.name} clients={rep.clients} region={rep.region} role={rep.role} skills={rep.skills} id={rep.id || index}/>
             </div>
           ))}
         </div>

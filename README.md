@@ -56,18 +56,15 @@ modules/
 
 ### Frontend (Next.js)
 
-The frontend uses Next.js 15 with several features:
+The frontend uses Next.js with several features:
 
-- **useOptimistic**: For loading state when submitting prompts
-- **Lazy Loading**: Dynamically loads the AI Prompt component and its results
-- **Responsive Layout**: Built with TailwindCSS
 - **Chat History**: Stored in **React Context + localStorage** to persist even after refresh or page navigation
 
 ---
 
 ## API Documentation
 
-Accessible at http://localhost:8000/docs or through the provided openapi.json file
+Accessible at http://localhost:8100/docs or through the provided openapi.json file
 
 ---
 
@@ -76,8 +73,8 @@ Accessible at http://localhost:8000/docs or through the provided openapi.json fi
 ### 1️ Clone the Repository
 
 ```bash
-git clone https://github.com/username/ai-prompt-app.git
-cd ai-prompt-app
+git clone https://github.com/agustriad/coding-test-interopera.git
+cd coding-test-interopera
 ```
 
 ### 2️ Folder Structure
@@ -86,6 +83,7 @@ cd ai-prompt-app
 /backend
 /frontend
 /docker-compose.yml
+/README.md
 ```
 
 ### 3️ Run via Docker Compose
@@ -95,7 +93,7 @@ docker-compose up --build
 ```
 
 - **frontend**: http://localhost:3000
-- **backend (FastAPI)**: http://localhost:8000
+- **backend (FastAPI)**: http://localhost:8100
 - **redis**: default port 6379
 
 ### 4️ Environment Variables
@@ -104,7 +102,7 @@ docker-compose up --build
 
 ```
 ENV=development
-PORT=8000
+PORT=8100
 LOG_LEVEL=debug
 
 #REDIS
@@ -120,7 +118,7 @@ GEMINI_MODEL=gemini-2.0-flash
 #### Frontend (.env.local)
 
 ```
-NEXT_PUBLIC_BACKEND_URL=http://backend:8000
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8100
 ```
 
 ---

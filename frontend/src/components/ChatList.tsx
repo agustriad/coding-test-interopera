@@ -10,9 +10,20 @@ export default function ChatList() {
   return (
     <div className="p-4 space-y-3 overflow-auto">
       {chats.map((chat) => (
-        // eslint-disable-next-line react/jsx-key
-        <div className={`p-5 rounded ${!chat.response ? "bg-blue-100 text-blue-900" : "bg-gray-200 text-gray-900"} w-90 h-auto `}>
-            <ReactMarkdown  remarkPlugins={[remarkGfm]}>{!chat.response ? chat.content : chat.response}</ReactMarkdown>
+        <div key={chat.id} className="mb-4">
+          <div className="p-5 rounded bg-blue-100 text-blue-900 w-90 h-auto">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {chat.content}
+            </ReactMarkdown>
+          </div>
+
+          {chat.response && (
+            <div className="p-5 rounded bg-gray-200 text-gray-900 w-90 h-auto mt-2">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {chat.response}
+              </ReactMarkdown>
+            </div>
+          )}
         </div>
       ))}
     </div>
