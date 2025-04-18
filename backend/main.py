@@ -1,33 +1,29 @@
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-import json
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from src.core.cache import cache
+from src.core.logger import logger
+from src.core.config import settings
+from src.core.middleware import middlewares
+from src.modules.sales.interfaces.api.sales_router import sales_router
+from src.modules.ai_prompt.interfaces.api.prompt_router import prompt_router
 
-app = FastAPI()
 
-# Load dummy data
-with open("dummyData.json", "r") as f:
-    DUMMY_DATA = json.load(f)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await cache.connect()
+    yield
+    await cache.disconnect()
 
-@app.get("/api/data")
-def get_data():
-    """
-    Returns dummy data (e.g., list of users).
-    """
-    return DUMMY_DATA
+app = FastAPI(lifespan=lifespan)
 
-@app.post("/api/ai")
-async def ai_endpoint(request: Request):
-    """
-    Accepts a user question and returns a placeholder AI response.
-    (Optionally integrate a real AI model or external service here.)
-    """
-    body = await request.json()
-    user_question = body.get("question", "")
-    
-    # Placeholder logic: echo the question or generate a simple response
-    # Replace with real AI logic as desired (e.g., call to an LLM).
-    return {"answer": f"This is a placeholder answer to your question: {user_question}"}
+for list in middlewares:
+    app.add_middleware(list["middleware_class"], **list["options"])
 
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
+# app.include_router(router)
+app.include_router(sales_router, prefix="/api/sales-reps", tags=["Sales"])
+app.include_router(prompt_router, prefix="/api/ai", tags=["Prompt"])
+
+@app.get("/")
+async def root():
+    return {"message": f"Welcome to {settings.PROJECT_NAME}"}

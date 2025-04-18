@@ -1,0 +1,50 @@
+services:
+  backend:
+    build: ./backend
+    container_name: dev_fastapi
+    ports:
+      - "8100:8100"
+    stdin_open: true # Membuka akses ke stdin
+    tty: true
+    restart: unless-stopped
+    networks:
+      - dev-network
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: promptredis
+    ports:
+      - "6379:6379"
+    networks:
+      - dev-network
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    
+  frontend:
+    build: ./frontend
+    container_name: dev_nextjs
+    ports:
+      - "3000:3000"
+    stdin_open: true # Membuka akses ke stdin
+    tty: true
+    restart: unless-stopped
+    networks:
+      - dev-network
+    env_file:
+      - ./frontend/.env.local
+    depends_on:
+      - backend
+
+volumes:
+  redis_data:
+    driver: local
+
+
+networks:
+  dev-network:
+    driver: bridge
+    
