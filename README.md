@@ -15,6 +15,7 @@ This project is a solution for implementing:
 - Using **Domain-Driven Design (DDD)** on backend to ensure clear separation between business logic, infrastructure, and external interfaces.
 - Caching AI prompt responses via **Redis** to improve response time and minimize redundant requests.
 - **Next.js with React Context + localStorage** on frontend to persist chat history across sessions and refresh.
+- create Card Sales
 
 
 ---
@@ -29,6 +30,7 @@ The backend uses a **Domain-Driven Design (DDD)** architecture that separates do
 
 ```
 modules/
+-- sales/
 -- ai_prompt/
 ---- application/
 ------ dto/
