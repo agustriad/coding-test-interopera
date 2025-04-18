@@ -1,0 +1,227 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "FastAPI", "version": "0.1.0" },
+  "paths": {
+    "/api/sales-reps/": {
+      "get": {
+        "tags": ["Sales"],
+        "summary": "Get List Sales Rep",
+        "operationId": "get_list_sales_rep_api_sales_reps__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ResponseDto" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sales-reps/top": {
+      "get": {
+        "tags": ["Sales"],
+        "summary": "Get Top Sales Rep",
+        "operationId": "get_top_sales_rep_api_sales_reps_top_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    },
+    "/api/sales-reps/detail/{sales_id}": {
+      "get": {
+        "tags": ["Sales"],
+        "summary": "Get Sales Rep By Id",
+        "operationId": "get_sales_rep_by_id_api_sales_reps_detail__sales_id__get",
+        "parameters": [
+          {
+            "name": "sales_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "title": "Sales Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/": {
+      "post": {
+        "tags": ["Prompt"],
+        "summary": "Store Prompt",
+        "operationId": "store_prompt_api_ai__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PostPromptDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClientDTO": {
+        "properties": {
+          "name": { "type": "string", "title": "Name" },
+          "industry": { "type": "string", "title": "Industry" },
+          "contact": { "type": "string", "title": "Contact" }
+        },
+        "type": "object",
+        "required": ["name", "industry", "contact"],
+        "title": "ClientDTO"
+      },
+      "DealDTO": {
+        "properties": {
+          "client": { "type": "string", "title": "Client" },
+          "value": { "type": "integer", "title": "Value" },
+          "status": { "type": "string", "title": "Status" }
+        },
+        "type": "object",
+        "required": ["client", "value", "status"],
+        "title": "DealDTO"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "PostPromptDTO": {
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 3,
+            "title": "Content",
+            "example": "What is the meaning of life?"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 3,
+            "title": "Type",
+            "example": "text or image"
+          }
+        },
+        "type": "object",
+        "required": ["content", "type"],
+        "title": "PostPromptDTO"
+      },
+      "ResponseDto": {
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/SalesDTO" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": ["data"],
+        "title": "ResponseDto"
+      },
+      "SalesDTO": {
+        "properties": {
+          "id": { "type": "integer", "title": "Id" },
+          "name": { "type": "string", "title": "Name" },
+          "role": { "type": "string", "title": "Role" },
+          "region": { "type": "string", "title": "Region" },
+          "skills": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Skills"
+          },
+          "deals": {
+            "items": { "$ref": "#/components/schemas/DealDTO" },
+            "type": "array",
+            "title": "Deals"
+          },
+          "clients": {
+            "items": { "$ref": "#/components/schemas/ClientDTO" },
+            "type": "array",
+            "title": "Clients"
+          },
+          "total_deal": { "type": "integer", "title": "Total Deal" }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "role",
+          "region",
+          "skills",
+          "deals",
+          "clients",
+          "total_deal"
+        ],
+        "title": "SalesDTO"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
